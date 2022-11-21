@@ -1202,8 +1202,10 @@ void KIT_LED(void)
 KIT_SW:
 - options: {callFromInitBoot: 'true', prefix: SW_, coreID: core0, enableClock: 'true'}
 - pin_list:
-  - {pin_num: '81', peripheral: GPIOC, signal: 'GPIO, 9', pin_signal: ADC1_SE5b/CMP0_IN3/PTC9/FTM3_CH5/I2S0_RX_BCLK/FB_AD6/FTM2_FLT0, direction: INPUT, pull_select: no_init}
-  - {pin_num: '82', peripheral: GPIOC, signal: 'GPIO, 10', pin_signal: ADC1_SE6b/PTC10/I2C1_SCL/FTM3_CH6/I2S0_RX_FS/FB_AD5, direction: INPUT, pull_select: no_init}
+  - {pin_num: '81', peripheral: GPIOC, signal: 'GPIO, 9', pin_signal: ADC1_SE5b/CMP0_IN3/PTC9/FTM3_CH5/I2S0_RX_BCLK/FB_AD6/FTM2_FLT0, direction: INPUT, gpio_interrupt: kPORT_InterruptOrDMADisabled,
+    pull_select: no_init}
+  - {pin_num: '82', peripheral: GPIOC, signal: 'GPIO, 10', pin_signal: ADC1_SE6b/PTC10/I2C1_SCL/FTM3_CH6/I2S0_RX_FS/FB_AD5, direction: INPUT, gpio_interrupt: kPORT_InterruptOrDMADisabled,
+    pull_select: no_init}
   - {pin_num: '83', peripheral: GPIOC, signal: 'GPIO, 11', pin_signal: ADC1_SE7b/PTC11/LLWU_P11/I2C1_SDA/FTM3_CH7/I2S0_RXD1/FB_RW_b, direction: INPUT, pull_select: no_init}
   - {pin_num: '84', peripheral: GPIOC, signal: 'GPIO, 12', pin_signal: PTC12/UART4_RTS_b/FB_AD27/FTM3_FLT0, direction: INPUT, pull_select: no_init}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
@@ -1252,6 +1254,9 @@ void KIT_SW(void)
     /* PORTC10 (pin 82) is configured as PTC10 */
     PORT_SetPinMux(SW_PTC10_PORT, SW_PTC10_PIN, kPORT_MuxAsGpio);
 
+    /* Interrupt configuration on PORTC10 (pin 82): Interrupt/DMA request is disabled */
+    PORT_SetPinInterruptConfig(SW_PTC10_PORT, SW_PTC10_PIN, kPORT_InterruptOrDMADisabled);
+
     /* PORTC11 (pin 83) is configured as PTC11 */
     PORT_SetPinMux(SW_PTC11_PORT, SW_PTC11_PIN, kPORT_MuxAsGpio);
 
@@ -1260,6 +1265,9 @@ void KIT_SW(void)
 
     /* PORTC9 (pin 81) is configured as PTC9 */
     PORT_SetPinMux(SW_PTC9_PORT, SW_PTC9_PIN, kPORT_MuxAsGpio);
+
+    /* Interrupt configuration on PORTC9 (pin 81): Interrupt/DMA request is disabled */
+    PORT_SetPinInterruptConfig(SW_PTC9_PORT, SW_PTC9_PIN, kPORT_InterruptOrDMADisabled);
 }
 /***********************************************************************************************************************
  * EOF

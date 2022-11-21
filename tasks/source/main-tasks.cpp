@@ -46,13 +46,13 @@
 // PTB23	LED_PTB23_PIN  LED_PTB23_GPIO
 
 
-/* FreeRTOS kernel includes. */
+// FreeRTOS kernel includes.
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
 #include "timers.h"
 
-/* System includes. */
+// System includes.
 #include <stdio.h>
 #include "board.h"
 #include "peripherals.h"
@@ -61,7 +61,7 @@
 #include "MK64F12.h"
 #include "fsl_debug_console.h"
 
-/* Task priorities. */
+// Task priorities.
 #define LOW_TASK_PRIORITY 		(configMAX_PRIORITIES - 2)
 #define NORMAL_TASK_PRIORITY 	(configMAX_PRIORITIES - 1)
 #define HIGH_TASK_PRIORITY 		(configMAX_PRIORITIES)
@@ -106,7 +106,8 @@ LED_Data g_led_ptc[ LED_PTC_NUM ] =
 void task_led_pta_blink( void *t_arg )
 {
 	uint32_t l_inx = 0;
-    for (;;)
+
+    while ( 1 )
     {
     	// switch LED on
         GPIO_PinWrite( g_led_pta[ l_inx ].m_led_gpio, g_led_pta[ l_inx ].m_led_pin, 1 );
@@ -122,7 +123,7 @@ void task_led_pta_blink( void *t_arg )
 // This task is snake animation from left side on red LEDs
 void task_snake_left( void *t_arg )
 {
-	for ( ;; )
+	while ( 1 )
 	{
 		vTaskSuspend( 0 );
 
@@ -140,7 +141,7 @@ void task_snake_left( void *t_arg )
 // This task is snake animation from right side on red LEDs
 void task_snake_right( void *t_arg )
 {
-	for ( ;; )
+	while ( 1 )
 	{
 		vTaskSuspend( 0 );
 
@@ -158,6 +159,7 @@ void task_snake_right( void *t_arg )
 // This task monitors switches and control others led_* tasks
 void task_switches( void *t_arg )
 {
+	// Get task handles for task names
 	TaskHandle_t l_handle_led_pta = xTaskGetHandle( TASK_NAME_LED_PTA );
 	TaskHandle_t l_handle_led_snake_l = xTaskGetHandle( TASK_NAME_LED_SNAKE_L );
 	TaskHandle_t l_handle_led_snake_r = xTaskGetHandle( TASK_NAME_LED_SNAKE_R );
@@ -196,15 +198,20 @@ void task_switches( void *t_arg )
 	}
 }
 
+// Start application
 int main(void) {
 
-    /* Init board hardware. */
+    // Init board hardware.
     BOARD_InitBootPins();
     BOARD_InitBootClocks();
     BOARD_InitBootPeripherals();
     BOARD_InitDebugConsole();
 
-    /* Create tasks */
+    PRINTF( "FreeRTOS task demo program.\r\n" );
+    PRINTF( "Switches PTC9 and PTC10 will stop and run PTAx LEDs blinking.\r\n" );
+    PRINTF( "Switches PTC11 and PTC12 will start snake on red LEDS from the left and right side.\r\n");
+
+    // Create tasks
     if ( xTaskCreate(
     		task_led_pta_blink,
     		TASK_NAME_LED_PTA,
@@ -215,22 +222,26 @@ int main(void) {
     {
         PRINTF( "Unable to create task '%s'!\r\n", TASK_NAME_LED_PTA );
     }
+
     if ( xTaskCreate( task_snake_left, TASK_NAME_LED_SNAKE_L, configMINIMAL_STACK_SIZE + 100, NULL, NORMAL_TASK_PRIORITY, NULL ) != pdPASS )
     {
         PRINTF( "Unable to create task '%s'!\r\n", TASK_NAME_LED_SNAKE_L );
     }
+
     if ( xTaskCreate( task_snake_right, TASK_NAME_LED_SNAKE_R, configMINIMAL_STACK_SIZE + 100, NULL, NORMAL_TASK_PRIORITY, NULL ) != pdPASS)
     {
         PRINTF( "Unable to create task '%s'!\r\n", TASK_NAME_LED_SNAKE_R );
     }
+
     if ( xTaskCreate( task_switches, TASK_NAME_SWITCHES, configMINIMAL_STACK_SIZE + 100, NULL, NORMAL_TASK_PRIORITY, NULL) != pdPASS )
     {
         PRINTF( "Unable to create task '%s'!\r\n", TASK_NAME_SWITCHES );
     }
 
     vTaskStartScheduler();
-    for (;;)
-        ;
+
+    while ( 1 );
 
     return 0 ;
 }
+
