@@ -6,5 +6,5 @@
 
 # Documentation
 
-  See [FreeRTOS] Pocket Guide(https://github.com/osy-cs/osy-freertos-posix/blob/main/FreeRTOS-PockGui.md).
+  See [FreeRTOS Pocket Guide](https://github.com/osy-cs/osy-freertos-posix/blob/main/FreeRTOS-PockGui.md).
 
