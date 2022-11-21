@@ -1,0 +1,222 @@
+// **************************************************************************
+//
+//               FreeRTOS demo program for OSY labs
+//
+// Subject:      Operating Systems
+// Author:       Petr Olivka, petr.olivka@vsb.cz, 02/2022
+// Organization: Department of Computer Science, FEECS,
+//               VSB-Technical University of Ostrava, CZ
+//
+// File:         GPIO initialization for interrupts
+//
+// **************************************************************************
+//
+/* FreeRTOS kernel includes. */
+#include <demo-bin.h>
+#include "FreeRTOS.h"
+#include "semphr.h"
+
+/* System includes. */
+#include <stdio.h>
+#include "board.h"
+#include "peripherals.h"
+#include "pin_mux.h"
+//#include "clock_config.h"
+//#include "MK64F12.h"
+#include "fsl_debug_console.h"
+
+// Task priorities.
+#define LOW_TASK_PRIORITY 		(configMAX_PRIORITIES - 2)
+#define NORMAL_TASK_PRIORITY 	(configMAX_PRIORITIES - 1)
+#define HIGH_TASK_PRIORITY 		(configMAX_PRIORITIES)
+
+#define TASK_NAME_RED_LED		"red led"
+#define TASK_NAME_LEFT_SWITCH	"left switch"
+#define TASK_NAME_RIGHT_SWITCH	"right switch"
+
+#define LED_PTA_NUM 	2
+#define LED_PTC_NUM		8
+#define LED_PTB_NUM		9
+
+// pair of GPIO port and LED pin.
+struct LED_Data
+{
+	uint32_t m_led_pin;
+	GPIO_Type *m_led_gpio;
+};
+
+// all PTCx LEDs in array
+LED_Data g_led_ptc[ LED_PTC_NUM ] =
+{
+		{ LED_PTC0_PIN, LED_PTC0_GPIO },
+		{ LED_PTC1_PIN, LED_PTC1_GPIO },
+		{ LED_PTC2_PIN, LED_PTC2_GPIO },
+		{ LED_PTC3_PIN, LED_PTC3_GPIO },
+		{ LED_PTC4_PIN, LED_PTC4_GPIO },
+		{ LED_PTC5_PIN, LED_PTC5_GPIO },
+		{ LED_PTC7_PIN, LED_PTC7_GPIO },
+		{ LED_PTC8_PIN, LED_PTC8_GPIO },
+};
+
+// global variables
+SemaphoreHandle_t g_sem_left_switch;
+SemaphoreHandle_t g_sem_right_switch;
+
+int32_t g_red_led_index = 0;
+
+
+
+extern "C" {
+void PORTC_IRQHandler(void);
+}
+
+// ISR for PORTC
+void PORTC_IRQHandler(void)
+{
+    /* Clear external interrupt flag. */
+	uint32_t l_mask = GPIO_PortGetInterruptFlags( SW_PTC9_GPIO );
+	TickType_t l_cur_tick = xTaskGetTickCount();
+	static TickType_t l_left_last = 0;
+	static TickType_t l_right_last = 0;
+
+	// DO NOT USE return in this Interrupt Service Routine!!!
+
+	// Switch PTC9
+	if ( l_mask & SW_PTC9_GPIO_PIN_MASK )
+	{
+		// RECOMMENDED SOLUTION!!!
+		// wakeup some process using semaphore
+		if ( l_left_last + 10 < l_cur_tick )
+		{
+			xSemaphoreGiveFromISR( g_sem_left_switch, nullptr );
+			l_left_last = l_cur_tick;
+		}
+	}
+
+	// Switch PTC10
+	if ( l_mask & SW_PTC10_GPIO_PIN_MASK )
+	{
+	}
+
+	// Switch PTC11
+	if ( l_mask & SW_PTC11_GPIO_PIN_MASK )
+	{
+	}
+
+	// Switch PTC12
+	if ( l_mask & SW_PTC12_GPIO_PIN_MASK )
+	{
+		if ( l_right_last + 10 < l_cur_tick )
+		{
+			xSemaphoreGiveFromISR( g_sem_right_switch, nullptr );
+			l_right_last = l_cur_tick;
+		}
+	}
+
+	// Clear interrrupt flags
+    GPIO_PortClearInterruptFlags( SW_PTC9_GPIO,
+    		SW_PTC9_GPIO_PIN_MASK | SW_PTC10_GPIO_PIN_MASK | SW_PTC11_PIN_MASK | SW_PTC12_PIN_MASK );
+}
+
+// Initialize GPIO for interrupts
+void InitGPIOInterrupts()
+{
+	// Set correct priority
+    NVIC_SetPriority( PORTC_IRQn, 3 );
+
+    // Enable interrupt for switches
+    // Available interrupt methods: kPORT_InterruptFallingEdge,kPORT_InterruptRisingEdge, kPORT_InterruptEitherEdge;
+    PORT_SetPinInterruptConfig( SW_PTC9_PORT, SW_PTC9_PIN, kPORT_InterruptFallingEdge );
+    PORT_SetPinInterruptConfig( SW_PTC9_PORT, SW_PTC10_PIN, kPORT_InterruptFallingEdge );
+    PORT_SetPinInterruptConfig( SW_PTC9_PORT, SW_PTC11_PIN, kPORT_InterruptFallingEdge );
+    PORT_SetPinInterruptConfig( SW_PTC9_PORT, SW_PTC12_PIN, kPORT_InterruptFallingEdge );
+
+    // Enable interrupt
+    EnableIRQ( PORTC_IRQn );
+
+    // Create binary semaphores
+    g_sem_left_switch = xSemaphoreCreateBinary();
+    g_sem_right_switch = xSemaphoreCreateBinary();
+}
+
+// Tasks
+void task_left_switch( void *t_arg )
+{
+	while ( 1 )
+	{
+		xSemaphoreTake( g_sem_left_switch, portMAX_DELAY );
+		vTaskDelay( 1 );
+		if ( GPIO_PinRead( SW_PTC9_GPIO, SW_PTC9_PIN ) != 0 ) continue;
+
+		g_red_led_index--;
+	}
+}
+
+void task_right_switch( void *t_arg )
+{
+	while ( 1 )
+	{
+		xSemaphoreTake( g_sem_right_switch, portMAX_DELAY );
+		vTaskDelay( 1 );
+		if ( GPIO_PinRead( SW_PTC12_GPIO, SW_PTC12_PIN ) != 0 ) continue;
+
+		g_red_led_index++;
+
+		vTaskDelay( 1 );
+	}
+}
+
+void task_show_red_led( void *t_arg )
+{
+	int32_t l_last_index = -1;
+
+	while ( 1 )
+	{
+		// check range of g_red_led_index
+		if ( g_red_led_index >= LED_PTC_NUM )
+			g_red_led_index = LED_PTC_NUM - 1;
+		if ( g_red_led_index < 0 )
+			g_red_led_index = 0;
+
+		// position changed?
+		if ( l_last_index != g_red_led_index )
+		{
+			if ( l_last_index < 0 ) l_last_index = g_red_led_index;
+
+			GPIO_PinWrite( g_led_ptc[ l_last_index ].m_led_gpio, g_led_ptc[ l_last_index ].m_led_pin, 0 );
+			GPIO_PinWrite( g_led_ptc[ g_red_led_index ].m_led_gpio, g_led_ptc[ g_red_led_index ].m_led_pin, 1 );
+
+			l_last_index = g_red_led_index;
+		}
+
+		vTaskDelay( 1 );
+	}
+}
+
+void InitDemoApp()
+{
+	InitGPIOInterrupts();
+
+    // Create tasks
+    if ( xTaskCreate(
+    		task_left_switch,
+			TASK_NAME_LEFT_SWITCH,
+			configMINIMAL_STACK_SIZE + 100,
+			NULL,
+			NORMAL_TASK_PRIORITY,
+			NULL) != pdPASS )
+    {
+        PRINTF( "Unable to create task '%s'!\r\n", TASK_NAME_LEFT_SWITCH );
+    }
+
+    if ( xTaskCreate( task_right_switch, TASK_NAME_RIGHT_SWITCH, configMINIMAL_STACK_SIZE + 100, NULL, HIGH_TASK_PRIORITY, NULL) != pdPASS )
+    {
+        PRINTF( "Unable to create task '%s'!\r\n", TASK_NAME_RED_LED );
+    }
+
+    if ( xTaskCreate( task_show_red_led, TASK_NAME_RED_LED, configMINIMAL_STACK_SIZE + 100, NULL, HIGH_TASK_PRIORITY, NULL) != pdPASS )
+    {
+        PRINTF( "Unable to create task '%s'!\r\n", TASK_NAME_RED_LED );
+    }
+
+}

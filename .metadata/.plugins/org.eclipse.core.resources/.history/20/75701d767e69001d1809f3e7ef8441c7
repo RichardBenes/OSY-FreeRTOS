@@ -1,0 +1,44 @@
+component/uart/fsl_adapter_uart.o component/uart/fsl_adapter_uart.d: \
+ ../component/uart/fsl_adapter_uart.c \
+ /poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/drivers/fsl_common.h \
+ /poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/device/fsl_device_registers.h \
+ /poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/device/MK64F12.h \
+ /poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/CMSIS/core_cm4.h \
+ /poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/CMSIS/cmsis_version.h \
+ /poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/CMSIS/cmsis_compiler.h \
+ /poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/CMSIS/cmsis_gcc.h \
+ /poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/device/system_MK64F12.h \
+ /poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/device/MK64F12_features.h \
+ /poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/drivers/fsl_common_arm.h \
+ /poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/drivers/fsl_clock.h \
+ /poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/drivers/fsl_common.h \
+ /poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/drivers/fsl_uart.h \
+ ../component/uart/fsl_adapter_uart.h \
+ /poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/freertos/freertos_kernel/include/FreeRTOS.h \
+ /poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/source/FreeRTOSConfig.h \
+ /poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/freertos/freertos_kernel/include/projdefs.h \
+ /poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/freertos/freertos_kernel/include/portable.h \
+ /poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/freertos/freertos_kernel/include/deprecated_definitions.h \
+ /poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/freertos/freertos_kernel/portable/GCC/ARM_CM4F/portmacro.h \
+ /poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/freertos/freertos_kernel/include/mpu_wrappers.h
+/poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/drivers/fsl_common.h:
+/poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/device/fsl_device_registers.h:
+/poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/device/MK64F12.h:
+/poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/CMSIS/core_cm4.h:
+/poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/CMSIS/cmsis_version.h:
+/poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/CMSIS/cmsis_compiler.h:
+/poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/CMSIS/cmsis_gcc.h:
+/poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/device/system_MK64F12.h:
+/poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/device/MK64F12_features.h:
+/poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/drivers/fsl_common_arm.h:
+/poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/drivers/fsl_clock.h:
+/poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/drivers/fsl_common.h:
+/poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/drivers/fsl_uart.h:
+../component/uart/fsl_adapter_uart.h:
+/poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/freertos/freertos_kernel/include/FreeRTOS.h:
+/poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/source/FreeRTOSConfig.h:
+/poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/freertos/freertos_kernel/include/projdefs.h:
+/poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/freertos/freertos_kernel/include/portable.h:
+/poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/freertos/freertos_kernel/include/deprecated_definitions.h:
+/poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/freertos/freertos_kernel/portable/GCC/ARM_CM4F/portmacro.h:
+/poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/freertos/freertos_kernel/include/mpu_wrappers.h:

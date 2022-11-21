@@ -1,0 +1,26 @@
+freertos/freertos_kernel/timers.o freertos/freertos_kernel/timers.d: \
+ ../freertos/freertos_kernel/timers.c \
+ /poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/freertos/freertos_kernel/include/FreeRTOS.h \
+ /poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/source/FreeRTOSConfig.h \
+ /poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/freertos/freertos_kernel/include/projdefs.h \
+ /poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/freertos/freertos_kernel/include/portable.h \
+ /poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/freertos/freertos_kernel/include/deprecated_definitions.h \
+ /poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/freertos/freertos_kernel/portable/GCC/ARM_CM4F/portmacro.h \
+ /poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/freertos/freertos_kernel/include/mpu_wrappers.h \
+ /poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/freertos/freertos_kernel/include/task.h \
+ /poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/freertos/freertos_kernel/include/list.h \
+ /poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/freertos/freertos_kernel/include/queue.h \
+ /poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/freertos/freertos_kernel/include/task.h \
+ /poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/freertos/freertos_kernel/include/timers.h
+/poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/freertos/freertos_kernel/include/FreeRTOS.h:
+/poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/source/FreeRTOSConfig.h:
+/poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/freertos/freertos_kernel/include/projdefs.h:
+/poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/freertos/freertos_kernel/include/portable.h:
+/poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/freertos/freertos_kernel/include/deprecated_definitions.h:
+/poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/freertos/freertos_kernel/portable/GCC/ARM_CM4F/portmacro.h:
+/poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/freertos/freertos_kernel/include/mpu_wrappers.h:
+/poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/freertos/freertos_kernel/include/task.h:
+/poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/freertos/freertos_kernel/include/list.h:
+/poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/freertos/freertos_kernel/include/queue.h:
+/poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/freertos/freertos_kernel/include/task.h:
+/poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/freertos/freertos_kernel/include/timers.h:
