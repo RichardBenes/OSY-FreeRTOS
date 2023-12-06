@@ -1,8 +1,0 @@
-################################################################################
-# Automatically-generated file. Do not edit!
-################################################################################
-
-USER_OBJS := /poli/home/vyuka/osy/git/osy-workspace.rtos/demo-sem-int/source/demo-bin.o
-
-LIBS :=
-
