@@ -64,6 +64,8 @@
 #include "FreeRTOS_IP.h"
 #include "FreeRTOS_Sockets.h"
 
+#include "TCPEchoServer.h"
+
 // Task priorities.
 #define LOW_TASK_PRIORITY 		(configMAX_PRIORITIES - 2)
 #define NORMAL_TASK_PRIORITY 	(configMAX_PRIORITIES - 1)

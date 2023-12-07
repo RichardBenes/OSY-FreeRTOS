@@ -862,3 +862,173 @@ Caused by: java.lang.IllegalStateException: Connection pool shut down
 	at org.eclipse.ecf.provider.filetransfer.httpclient45.HttpClientRetrieveFileTransfer$1.performFileTransfer(HttpClientRetrieveFileTransfer.java:991)
 	at org.eclipse.ecf.filetransfer.FileTransferJob.run(FileTransferJob.java:76)
 	... 1 more
+!SESSION 2023-12-07 15:13:56.303 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=11.0.11
+java.vendor=AdoptOpenJDK
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_US
+Command-line arguments:  -os linux -ws gtk -arch x86_64 -data .
+
+!ENTRY com.nxp.swtools.kex.api.internal.MfactApiClient 4 0 2023-12-07 15:14:04.401
+!MESSAGE [NETWORK] listComponents - unknown host mcuxpresso.nxp.com
+
+!ENTRY com.nxp.swtools.kex.api.internal.MfactApiClient 4 0 2023-12-07 15:14:05.213
+!MESSAGE [NETWORK] listConfigs - unknown host mcuxpresso.nxp.com
+
+!ENTRY com.nxp.swtools.kex.api.internal.MfactApiClient 4 0 2023-12-07 15:14:05.216
+!MESSAGE [NETWORK] getProcessor - unknown host mcuxpresso.nxp.com
+
+!ENTRY org.eclipse.cdt.core 1 0 2023-12-07 15:14:10.760
+!MESSAGE Indexed 'demo-pwm' (34 sources, 188 headers) in 7.38 sec: 15,348 declarations; 39,427 references; 3 unresolved inclusions; 271 syntax errors; 760 unresolved names (1.4%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2023-12-07 15:14:14.904
+!MESSAGE Indexed 'demo-sem-int' (34 sources, 188 headers) in 4.13 sec: 15,348 declarations; 39,423 references; 3 unresolved inclusions; 271 syntax errors; 760 unresolved names (1.4%)
+
+!ENTRY org.eclipse.equinox.p2.transport.ecf 2 0 2023-12-07 15:14:16.639
+!MESSAGE Connection to https://mcuxpresso.nxp.com/eclipse/sdk/p2.index failed on mcuxpresso.nxp.com: Temporary failure in name resolution. Retry attempt 0 started
+!STACK 0
+java.net.UnknownHostException: mcuxpresso.nxp.com: Temporary failure in name resolution
+	at java.base/java.net.Inet6AddressImpl.lookupAllHostAddr(Native Method)
+	at java.base/java.net.InetAddress$PlatformNameService.lookupAllHostAddr(Unknown Source)
+	at java.base/java.net.InetAddress.getAddressesFromNameService(Unknown Source)
+	at java.base/java.net.InetAddress$NameServiceAddresses.get(Unknown Source)
+	at java.base/java.net.InetAddress.getAllByName0(Unknown Source)
+	at java.base/java.net.InetAddress.getAllByName(Unknown Source)
+	at java.base/java.net.InetAddress.getAllByName(Unknown Source)
+	at org.apache.http.impl.conn.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:45)
+	at org.apache.http.impl.conn.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:112)
+	at org.apache.http.impl.conn.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:376)
+	at org.apache.http.impl.execchain.MainClientExec.establishRoute(MainClientExec.java:393)
+	at org.apache.http.impl.execchain.MainClientExec.execute(MainClientExec.java:236)
+	at org.apache.http.impl.execchain.ProtocolExec.execute(ProtocolExec.java:186)
+	at org.apache.http.impl.execchain.RetryExec.execute(RetryExec.java:89)
+	at org.apache.http.impl.execchain.RedirectExec.execute(RedirectExec.java:110)
+	at org.apache.http.impl.client.InternalHttpClient.doExecute(InternalHttpClient.java:185)
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:83)
+	at org.eclipse.ecf.provider.filetransfer.httpclient45.HttpClientRetrieveFileTransfer.performConnect(HttpClientRetrieveFileTransfer.java:1003)
+	at org.eclipse.ecf.provider.filetransfer.httpclient45.HttpClientRetrieveFileTransfer.access$0(HttpClientRetrieveFileTransfer.java:995)
+	at org.eclipse.ecf.provider.filetransfer.httpclient45.HttpClientRetrieveFileTransfer$1.performFileTransfer(HttpClientRetrieveFileTransfer.java:991)
+	at org.eclipse.ecf.filetransfer.FileTransferJob.run(FileTransferJob.java:76)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+
+!ENTRY com.crt.log 4 -1 2023-12-07 15:14:16.870
+!MESSAGE Unknown Host: https://mcuxpresso.nxp.com/eclipse/sdk/artifacts.xml
+!STACK 0
+java.lang.Exception: org.eclipse.equinox.p2.core.ProvisionException: Unknown Host: https://mcuxpresso.nxp.com/eclipse/sdk/artifacts.xml
+	at com.crt.utils.general.Reporter.log(Reporter.java:591)
+	at com.nxp.mcuxpresso.core.datamodels.ui.jobs.RefreshSDKRepoJob.run(RefreshSDKRepoJob.java:265)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Caused by: org.eclipse.equinox.p2.core.ProvisionException: Unknown Host: https://mcuxpresso.nxp.com/eclipse/sdk/artifacts.xml
+	at org.eclipse.equinox.internal.p2.repository.CacheManager.createCache(CacheManager.java:249)
+	at org.eclipse.equinox.internal.p2.artifact.repository.simple.SimpleArtifactRepositoryFactory.getLocalFile(SimpleArtifactRepositoryFactory.java:68)
+	at org.eclipse.equinox.internal.p2.artifact.repository.simple.SimpleArtifactRepositoryFactory.load(SimpleArtifactRepositoryFactory.java:92)
+	at org.eclipse.equinox.internal.p2.artifact.repository.simple.SimpleArtifactRepositoryFactory.load(SimpleArtifactRepositoryFactory.java:80)
+	at org.eclipse.equinox.internal.p2.artifact.repository.ArtifactRepositoryManager.factoryLoad(ArtifactRepositoryManager.java:92)
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository(AbstractRepositoryManager.java:787)
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository(AbstractRepositoryManager.java:685)
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.basicRefreshRepository(AbstractRepositoryManager.java:205)
+	at org.eclipse.equinox.internal.p2.artifact.repository.ArtifactRepositoryManager.refreshRepository(ArtifactRepositoryManager.java:136)
+	at com.nxp.mcuxpresso.core.datamodels.ui.jobs.RefreshSDKRepoJob.run(RefreshSDKRepoJob.java:168)
+	... 1 more
+Caused by: java.net.UnknownHostException: mcuxpresso.nxp.com
+	at java.base/java.net.InetAddress$CachedAddresses.get(Unknown Source)
+	at java.base/java.net.InetAddress.getAllByName0(Unknown Source)
+	at java.base/java.net.InetAddress.getAllByName(Unknown Source)
+	at java.base/java.net.InetAddress.getAllByName(Unknown Source)
+	at org.apache.http.impl.conn.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:45)
+	at org.apache.http.impl.conn.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:112)
+	at org.apache.http.impl.conn.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:376)
+	at org.apache.http.impl.execchain.MainClientExec.establishRoute(MainClientExec.java:393)
+	at org.apache.http.impl.execchain.MainClientExec.execute(MainClientExec.java:236)
+	at org.apache.http.impl.execchain.ProtocolExec.execute(ProtocolExec.java:186)
+	at org.apache.http.impl.execchain.RetryExec.execute(RetryExec.java:89)
+	at org.apache.http.impl.execchain.RedirectExec.execute(RedirectExec.java:110)
+	at org.apache.http.impl.client.InternalHttpClient.doExecute(InternalHttpClient.java:185)
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:83)
+	at org.eclipse.ecf.provider.filetransfer.httpclient45.HttpClientFileSystemBrowser.runRequest(HttpClientFileSystemBrowser.java:248)
+	at org.eclipse.ecf.provider.filetransfer.browse.AbstractFileSystemBrowser$DirectoryJob.run(AbstractFileSystemBrowser.java:71)
+	... 1 more
+
+!ENTRY org.eclipse.cdt.core 1 0 2023-12-07 15:14:17.828
+!MESSAGE Indexed 'sem-int' (35 sources, 188 headers) in 2.9 sec: 15,370 declarations; 39,621 references; 3 unresolved inclusions; 271 syntax errors; 760 unresolved names (1.4%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2023-12-07 15:14:19.416
+!MESSAGE Indexed 'tasks' (34 sources, 186 headers) in 1.58 sec: 15,365 declarations; 39,561 references; 3 unresolved inclusions; 271 syntax errors; 760 unresolved names (1.4%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2023-12-07 15:14:21.349
+!MESSAGE Indexed 'tcpip' (50 sources, 222 headers) in 1.93 sec: 19,829 declarations; 61,434 references; 3 unresolved inclusions; 274 syntax errors; 809 unresolved names (0.99%)
+
+!ENTRY com.crt.log 1 0 2023-12-07 15:15:59.211
+!MESSAGE Trying to connect to redlink server on port 3025.
+
+!ENTRY com.nxp.mcuxpresso.core.debug.support.linkserver 1 0 2023-12-07 15:15:59.220
+!MESSAGE RedlinkServer telnet session connected on port 3025->54182 @ 127.0.0.1
+
+!ENTRY com.nxp.mcuxpresso.core.debug.support.linkserver 4 0 2023-12-07 15:16:01.858
+!MESSAGE Unable to parse ProbeList output to get probe ref count: []
+
+!ENTRY com.crt.utils 1 0 2023-12-07 15:16:08.745
+!MESSAGE Connected to localhost on port 2332.
+
+!ENTRY com.nxp.mcuxpresso.core.debug 1 0 2023-12-07 15:16:09.022
+!MESSAGE Telnet session connected on port 2333->50168 @ 127.0.0.1
+
+!ENTRY org.eclipse.cdt.dsf 4 10005 2023-12-07 15:17:41.277
+!MESSAGE Request for monitor: '121^error,msg="No symbol "FreeRTOSDebugConfig" in current context."' resulted in an error.
+!SUBENTRY 1 org.eclipse.cdt.dsf.gdb 4 10004 2023-12-07 15:17:41.277
+!MESSAGE Failed to execute MI command:
+-data-evaluate-expression &(FreeRTOSDebugConfig)
+Error message from debugger back end:
+No symbol "FreeRTOSDebugConfig" in current context.
+!STACK 0
+java.lang.Exception: No symbol "FreeRTOSDebugConfig" in current context.
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.processMIOutput(AbstractMIControl.java:1013)
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.run(AbstractMIControl.java:842)
+
+!ENTRY org.eclipse.cdt.dsf 4 10005 2023-12-07 15:17:41.277
+!MESSAGE Request for monitor: '122^error,msg="No struct type named TaskControlBlock_t."' resulted in an error.
+!SUBENTRY 1 org.eclipse.cdt.dsf.gdb 4 10004 2023-12-07 15:17:41.277
+!MESSAGE Failed to execute MI command:
+-data-evaluate-expression "sizeof(struct TaskControlBlock_t)"
+Error message from debugger back end:
+No struct type named TaskControlBlock_t.
+!STACK 0
+java.lang.Exception: No struct type named TaskControlBlock_t.
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.processMIOutput(AbstractMIControl.java:1013)
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.run(AbstractMIControl.java:842)
+
+!ENTRY org.eclipse.cdt.dsf 4 10005 2023-12-07 15:17:41.588
+!MESSAGE Request for monitor: '123^error,msg="There is no member named pcTail."' resulted in an error.
+!SUBENTRY 1 org.eclipse.cdt.dsf.gdb 4 10004 2023-12-07 15:17:41.588
+!MESSAGE Failed to execute MI command:
+-data-evaluate-expression "&(((struct QueueDefinition *) 0)->pcTail)"
+Error message from debugger back end:
+There is no member named pcTail.
+!STACK 0
+java.lang.Exception: There is no member named pcTail.
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.processMIOutput(AbstractMIControl.java:1013)
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.run(AbstractMIControl.java:842)
+
+!ENTRY org.eclipse.cdt.dsf 4 10005 2023-12-07 15:17:41.661
+!MESSAGE Request for monitor: '164^error,msg="No symbol "ulTotalRunTime" in current context."' resulted in an error.
+!SUBENTRY 1 org.eclipse.cdt.dsf.gdb 4 10004 2023-12-07 15:17:41.661
+!MESSAGE Failed to execute MI command:
+-data-evaluate-expression ulTotalRunTime
+Error message from debugger back end:
+No symbol "ulTotalRunTime" in current context.
+!STACK 0
+java.lang.Exception: No symbol "ulTotalRunTime" in current context.
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.processMIOutput(AbstractMIControl.java:1013)
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.run(AbstractMIControl.java:842)
+
+!ENTRY org.eclipse.cdt.dsf 4 10005 2023-12-07 15:17:41.678
+!MESSAGE Request for monitor: '181^error,msg="Unable to read memory."' resulted in an error.
+!SUBENTRY 1 org.eclipse.cdt.dsf.gdb 4 10004 2023-12-07 15:17:41.678
+!MESSAGE Failed to execute MI command:
+-data-read-memory-bytes 0x8f3f014 32
+Error message from debugger back end:
+Unable to read memory.
+!STACK 0
+java.lang.Exception: Unable to read memory.
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.processMIOutput(AbstractMIControl.java:1013)
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.run(AbstractMIControl.java:842)

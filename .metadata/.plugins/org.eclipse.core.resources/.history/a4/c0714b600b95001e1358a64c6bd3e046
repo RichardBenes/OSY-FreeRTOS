@@ -332,7 +332,7 @@ int main(void) {
     // Set MAC to 5A FE C0 DE XXX YYY+20
     // IP address will be configured from DHCP
     //
-	uint8_t ucMAC[ ipMAC_ADDRESS_LENGTH_BYTES ] = { 0x5A, 0xFE, 0xC0, 0xDE, 0x00, 0x00 };
+	uint8_t ucMAC[ ipMAC_ADDRESS_LENGTH_BYTES ] = { 0x5A, 0xFE, 0xC0, 0xDE, 142, 88 };
 
    	uint8_t ucIPAddress[ ipIP_ADDRESS_LENGTH_BYTES ] = { 10, 0, 0, 10 };
    	uint8_t ucIPMask[ ipIP_ADDRESS_LENGTH_BYTES ] = { 255, 255, 255, 0 };
