@@ -46,7 +46,6 @@
 // PTB23	LED_PTB23_PIN  LED_PTB23_GPIO
 
 
-//#include <stdio.h>
 #include "board.h"
 #include "peripherals.h"
 #include "pin_mux.h"
@@ -112,7 +111,7 @@ LED_Data g_led_ptc[ LED_PTC_NUM ] =
 
 
 // Random number generator for TCP/IP stack
-BaseType_t xApplicationGetRandomNumber( uint32_t * tp_pul_number ) { return rand(); }
+BaseType_t xApplicationGetRandomNumber( uint32_t * tp_pul_number ) { return uxRand(); }
 
 
 // Some task stack overflow
