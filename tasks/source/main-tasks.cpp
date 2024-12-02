@@ -68,7 +68,8 @@
 #define HIGH_TASK_PRIORITY 		(configMAX_PRIORITIES)
 
 #define TASK_NAME_SWITCHES		"switches"
-#define TASK_NAME_LED_PTA		"led_pta"
+#define TASK_NAME_LED_PTA_LEFT  "led_pta_l"
+#define TASK_NAME_LED_PTA_RIGHT "led_pta_r"
 #define TASK_NAME_LED_SNAKE_L	"led_snake_l"
 #define TASK_NAME_LED_SNAKE_R	"led_snake_r"
 
@@ -104,20 +105,30 @@ LED_Data g_led_ptc[ LED_PTC_NUM ] =
 };
 
 // This task blink alternatively both PTAx LEDs
-void task_led_pta_blink( void *t_arg )
+void task_left_led_pta_blink( void *t_arg )
 {
-	uint32_t l_inx = 0;
-
     while ( 1 )
     {
     	// switch LED on
-        GPIO_PinWrite( g_led_pta[ l_inx ].m_led_gpio, g_led_pta[ l_inx ].m_led_pin, 1 );
-        vTaskDelay( 100 );
+        GPIO_PinWrite( g_led_pta[ 0 ].m_led_gpio, g_led_pta[ 0 ].m_led_pin, 1 );
+        vTaskDelay( 10 );
         // switch LED off
-        GPIO_PinWrite( g_led_pta[ l_inx ].m_led_gpio, g_led_pta[ l_inx ].m_led_pin, 0 );
-        // next LED
-        l_inx++;
-        l_inx %= LED_PTA_NUM;
+        GPIO_PinWrite( g_led_pta[ 0 ].m_led_gpio, g_led_pta[ 0 ].m_led_pin, 0 );
+        vTaskDelay( 2 );
+    }
+}
+
+// This task blink alternatively both PTAx LEDs
+void task_right_led_pta_blink( void *t_arg )
+{
+    while ( 1 )
+    {
+    	// switch LED on
+        GPIO_PinWrite( g_led_pta[ 1 ].m_led_gpio, g_led_pta[ 1 ].m_led_pin, 1 );
+        vTaskDelay( 2 );
+        // switch LED off
+        GPIO_PinWrite( g_led_pta[ 1 ].m_led_gpio, g_led_pta[ 1 ].m_led_pin, 0 );
+        vTaskDelay( 10 );
     }
 }
 
@@ -217,7 +228,7 @@ void task_snake_from_right( void *t_arg )
 void task_switches( void *t_arg )
 {
 	// Get task handles for task names
-	TaskHandle_t l_handle_led_pta = xTaskGetHandle( TASK_NAME_LED_PTA );
+	TaskHandle_t l_handle_led_pta = xTaskGetHandle( TASK_NAME_LED_PTA_LEFT );
 	TaskHandle_t l_handle_led_snake_l = xTaskGetHandle( TASK_NAME_LED_SNAKE_L );
 	TaskHandle_t l_handle_led_snake_r = xTaskGetHandle( TASK_NAME_LED_SNAKE_R );
 
@@ -284,14 +295,25 @@ int main(void) {
 
     // Create tasks
     if ( xTaskCreate(
-    		task_led_pta_blink,
-    		TASK_NAME_LED_PTA,
+    		task_left_led_pta_blink,
+    		TASK_NAME_LED_PTA_LEFT,
 			configMINIMAL_STACK_SIZE + 100,
 			NULL,
 			NORMAL_TASK_PRIORITY,
 			NULL ) != pdPASS )
     {
-        PRINTF( "Unable to create task '%s'!\r\n", TASK_NAME_LED_PTA );
+        PRINTF( "Unable to create task '%s'!\r\n", TASK_NAME_LED_PTA_LEFT );
+    }
+
+    if ( xTaskCreate(
+    		task_right_led_pta_blink,
+    		TASK_NAME_LED_PTA_RIGHT,
+			configMINIMAL_STACK_SIZE + 100,
+			NULL,
+			NORMAL_TASK_PRIORITY,
+			NULL ) != pdPASS )
+    {
+        PRINTF( "Unable to create task '%s'!\r\n", TASK_NAME_LED_PTA_RIGHT );
     }
 
     if ( xTaskCreate( task_snake_from_left, TASK_NAME_LED_SNAKE_L, configMINIMAL_STACK_SIZE + 100, NULL, NORMAL_TASK_PRIORITY, NULL ) != pdPASS )
