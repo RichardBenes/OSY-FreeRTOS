@@ -121,7 +121,7 @@ void task_led_pta_blink( void *t_arg )
 }
 
 typedef enum {
-	SS_LEFT, SS_RIGHT
+	SS_LEFT, SS_RIGHT, SS_RUNNING
 } SnakeSide;
 
 SnakeSide snake_side = SS_LEFT;
@@ -137,10 +137,17 @@ void task_snake_from_left( void *t_arg )
 			continue;
 		}
 
+		snake_side = SS_RUNNING;
+
 		for ( int inx = 0; inx < LED_PTC_NUM; inx++ )
 		{
 	    	// switch LED on
 	        GPIO_PinWrite( g_led_ptc[ inx ].m_led_gpio, g_led_ptc[ inx ].m_led_pin, 1 );
+
+	        if (inx < (LED_PTC_NUM - 1)) {
+	        	GPIO_PinWrite( g_led_ptc[ inx + 1 ].m_led_gpio, g_led_ptc[ inx + 1 ].m_led_pin, 1 );
+	        }
+
 	        vTaskDelay( 100 );
 	        // switch LED off
 	        GPIO_PinWrite( g_led_ptc[ inx ].m_led_gpio, g_led_ptc[ inx ].m_led_pin, 0 );
@@ -162,10 +169,17 @@ void task_snake_from_right( void *t_arg )
 			continue;
 		}
 
+		snake_side = SS_RUNNING;
+
 		for ( int inx = LED_PTC_NUM - 1; inx >= 0; inx-- )
 		{
 	    	// switch LED on
 	        GPIO_PinWrite( g_led_ptc[ inx ].m_led_gpio, g_led_ptc[ inx ].m_led_pin, 1 );
+
+	        if (inx > 0) {
+	        	GPIO_PinWrite( g_led_ptc[ inx - 1 ].m_led_gpio, g_led_ptc[ inx - 1 ].m_led_pin, 1 );
+	        }
+
 	        vTaskDelay( 100 );
 	        // switch LED off
 	        GPIO_PinWrite( g_led_ptc[ inx ].m_led_gpio, g_led_ptc[ inx ].m_led_pin, 0 );
@@ -204,14 +218,14 @@ void task_switches( void *t_arg )
 		if ( GPIO_PinRead( SW_PTC11_GPIO, SW_PTC11_PIN ) == 0 )
 		{
 			if ( l_handle_led_snake_l )
-				vTaskResume( l_handle_led_snake_l );
+				vTaskResume( l_handle_led_snake_r );
 		}
 
 		// test PTC12 switch
 		if ( GPIO_PinRead( SW_PTC12_GPIO, SW_PTC12_PIN ) == 0 )
 		{
 			if ( l_handle_led_snake_r )
-				vTaskResume( l_handle_led_snake_r );
+				vTaskResume( l_handle_led_snake_l );
 		}
 
 		vTaskDelay( 1 );
@@ -230,6 +244,8 @@ int main(void) {
     PRINTF( "FreeRTOS task demo program.\r\n" );
     PRINTF( "Switches PTC9 and PTC10 will stop and run PTAx LEDs blinking.\r\n" );
     PRINTF( "Switches PTC11 and PTC12 will start snake on red LEDS from the left and right side.\r\n");
+
+    GPIO_PinWrite( g_led_ptc[ 0 ].m_led_gpio, g_led_ptc[ 0 ].m_led_pin, 1 );
 
     // Create tasks
     if ( xTaskCreate(
