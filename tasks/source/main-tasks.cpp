@@ -54,6 +54,7 @@
 
 // System includes.
 #include <stdio.h>
+#include <stdbool.h>
 #include "board.h"
 #include "peripherals.h"
 #include "pin_mux.h"
@@ -120,10 +121,14 @@ void task_led_pta_blink( void *t_arg )
     }
 }
 
-typedef enum {
-	SS_LEFT, SS_RIGHT, SS_RUNNING
+typedef enum
+{
+	SS_LEFT,
+	SS_RIGHT,
+	SS_RUNNING
 } SnakeSide;
 
+int subsequent_scheduled_runs = 0;
 SnakeSide snake_side = SS_LEFT;
 
 // This task is snake animation from left side on red LEDs
@@ -133,7 +138,8 @@ void task_snake_from_left( void *t_arg )
 	{
 		vTaskSuspend( 0 );
 
-		if (snake_side == SS_RIGHT) {
+		if ((snake_side == SS_RIGHT) || (snake_side == SS_RUNNING))
+		{
 			continue;
 		}
 
@@ -144,7 +150,8 @@ void task_snake_from_left( void *t_arg )
 	    	// switch LED on
 	        GPIO_PinWrite( g_led_ptc[ inx ].m_led_gpio, g_led_ptc[ inx ].m_led_pin, 1 );
 
-	        if (inx < (LED_PTC_NUM - 1)) {
+	        if (inx < (LED_PTC_NUM - 1))
+	        {
 	        	GPIO_PinWrite( g_led_ptc[ inx + 1 ].m_led_gpio, g_led_ptc[ inx + 1 ].m_led_pin, 1 );
 	        }
 
@@ -155,6 +162,13 @@ void task_snake_from_left( void *t_arg )
 
 		GPIO_PinWrite(g_led_ptc[LED_PTC_NUM - 1].m_led_gpio, g_led_ptc[LED_PTC_NUM - 1].m_led_pin, 1);
 		snake_side = SS_RIGHT;
+
+		if (subsequent_scheduled_runs > 0)
+		{
+			subsequent_scheduled_runs -= 1;
+			TaskHandle_t l_handle_led_snake_r = xTaskGetHandle( TASK_NAME_LED_SNAKE_R );
+			vTaskResume(l_handle_led_snake_r);
+		}
 	}
 }
 
@@ -165,7 +179,8 @@ void task_snake_from_right( void *t_arg )
 	{
 		vTaskSuspend( 0 );
 
-		if (snake_side == SS_LEFT) {
+		if ((snake_side == SS_LEFT) || (snake_side == SS_RUNNING))
+		{
 			continue;
 		}
 
@@ -176,7 +191,8 @@ void task_snake_from_right( void *t_arg )
 	    	// switch LED on
 	        GPIO_PinWrite( g_led_ptc[ inx ].m_led_gpio, g_led_ptc[ inx ].m_led_pin, 1 );
 
-	        if (inx > 0) {
+	        if (inx > 0)
+	        {
 	        	GPIO_PinWrite( g_led_ptc[ inx - 1 ].m_led_gpio, g_led_ptc[ inx - 1 ].m_led_pin, 1 );
 	        }
 
@@ -187,6 +203,13 @@ void task_snake_from_right( void *t_arg )
 
 		GPIO_PinWrite(g_led_ptc[0].m_led_gpio, g_led_ptc[0].m_led_pin, 1);
 		snake_side = SS_LEFT;
+
+		if (subsequent_scheduled_runs > 0)
+		{
+			subsequent_scheduled_runs -= 1;
+			TaskHandle_t l_handle_led_snake_l = xTaskGetHandle( TASK_NAME_LED_SNAKE_L );
+			vTaskResume(l_handle_led_snake_l);
+		}
 	}
 }
 
@@ -210,8 +233,20 @@ void task_switches( void *t_arg )
 		// test PTC10 switch
 		if ( GPIO_PinRead( SW_PTC10_GPIO, SW_PTC10_PIN ) == 0 )
 		{
-			if ( l_handle_led_pta )
-				vTaskResume( l_handle_led_pta );
+			if (snake_side != SS_RUNNING)
+			{
+				subsequent_scheduled_runs = 1;
+
+				if (snake_side == SS_LEFT)
+				{
+					vTaskResume(l_handle_led_snake_l);
+				}
+
+				if (snake_side == SS_RIGHT)
+				{
+					vTaskResume(l_handle_led_snake_r);
+				}
+			}
 		}
 
 		// test PTC11 switch
