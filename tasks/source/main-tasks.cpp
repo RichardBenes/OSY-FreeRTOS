@@ -70,6 +70,7 @@
 #define TASK_NAME_SWITCHES		"switches"
 #define TASK_NAME_LED_PTA_LEFT  "led_pta_l"
 #define TASK_NAME_LED_PTA_RIGHT "led_pta_r"
+#define TASK_NAME_LED_PTA_SCN_BTN "led_pta_scn_btn"
 #define TASK_NAME_LED_SNAKE_L	"led_snake_l"
 #define TASK_NAME_LED_SNAKE_R	"led_snake_r"
 
@@ -104,17 +105,28 @@ LED_Data g_led_ptc[ LED_PTC_NUM ] =
 		{ LED_PTC8_PIN, LED_PTC8_GPIO },
 };
 
+#define MAX_BRIGHTNESS_DUTY 20
+unsigned int left_brightness_duty = 0;
+#define RIGHT_BRIGHTNESS_DUTY (MAX_BRIGHTNESS_DUTY - left_brightness_duty)
+
 // This task blink alternatively both PTAx LEDs
 void task_left_led_pta_blink( void *t_arg )
 {
     while ( 1 )
     {
     	// switch LED on
-        GPIO_PinWrite( g_led_pta[ 0 ].m_led_gpio, g_led_pta[ 0 ].m_led_pin, 1 );
-        vTaskDelay( 10 );
-        // switch LED off
-        GPIO_PinWrite( g_led_pta[ 0 ].m_led_gpio, g_led_pta[ 0 ].m_led_pin, 0 );
-        vTaskDelay( 2 );
+    	if (left_brightness_duty > 0)
+    	{
+            GPIO_PinWrite( g_led_pta[ 0 ].m_led_gpio, g_led_pta[ 0 ].m_led_pin, 1 );
+            vTaskDelay( left_brightness_duty );
+    	}
+
+		// switch LED off
+    	if (left_brightness_duty < MAX_BRIGHTNESS_DUTY)
+    	{
+            GPIO_PinWrite( g_led_pta[ 0 ].m_led_gpio, g_led_pta[ 0 ].m_led_pin, 0 );
+            vTaskDelay( MAX_BRIGHTNESS_DUTY - left_brightness_duty );
+    	}
     }
 }
 
@@ -124,13 +136,50 @@ void task_right_led_pta_blink( void *t_arg )
     while ( 1 )
     {
     	// switch LED on
-        GPIO_PinWrite( g_led_pta[ 1 ].m_led_gpio, g_led_pta[ 1 ].m_led_pin, 1 );
-        vTaskDelay( 2 );
-        // switch LED off
-        GPIO_PinWrite( g_led_pta[ 1 ].m_led_gpio, g_led_pta[ 1 ].m_led_pin, 0 );
-        vTaskDelay( 10 );
+    	if (RIGHT_BRIGHTNESS_DUTY > 0)
+    	{
+            GPIO_PinWrite( g_led_pta[ 1 ].m_led_gpio, g_led_pta[ 1 ].m_led_pin, 1 );
+            vTaskDelay( RIGHT_BRIGHTNESS_DUTY );
+    	}
+
+		// switch LED off
+    	if (RIGHT_BRIGHTNESS_DUTY < MAX_BRIGHTNESS_DUTY)
+    	{
+            GPIO_PinWrite( g_led_pta[ 1 ].m_led_gpio, g_led_pta[ 1 ].m_led_pin, 0 );
+            vTaskDelay( MAX_BRIGHTNESS_DUTY - RIGHT_BRIGHTNESS_DUTY );
+    	}
     }
 }
+
+// This task blink alternatively both PTAx LEDs
+void task_led_pta_blink_scan_buttons( void *t_arg )
+{
+    while ( 1 )
+    {
+		// test PTC9 switch
+		if ( GPIO_PinRead( SW_PTC9_GPIO, SW_PTC9_PIN ) == 0 )
+		{
+			if (left_brightness_duty < MAX_BRIGHTNESS_DUTY)
+			{
+				left_brightness_duty += 1;
+				vTaskDelay(40);
+			}
+		}
+
+		// test PTC10 switch
+		if ( GPIO_PinRead( SW_PTC10_GPIO, SW_PTC10_PIN ) == 0 )
+		{
+			if (left_brightness_duty > 0)
+			{
+				left_brightness_duty -= 1;
+				vTaskDelay(40);
+			}
+		}
+
+		PRINTF("%d\n\r", left_brightness_duty);
+    }
+}
+
 
 typedef enum
 {
@@ -234,32 +283,6 @@ void task_switches( void *t_arg )
 
 	while ( 1 )
 	{
-		// test PTC9 switch
-		if ( GPIO_PinRead( SW_PTC9_GPIO, SW_PTC9_PIN ) == 0 )
-		{
-			if ( l_handle_led_pta )
-				vTaskSuspend( l_handle_led_pta );
-		}
-
-		// test PTC10 switch
-		if ( GPIO_PinRead( SW_PTC10_GPIO, SW_PTC10_PIN ) == 0 )
-		{
-			if (snake_side != SS_RUNNING)
-			{
-				subsequent_scheduled_runs = 1;
-
-				if (snake_side == SS_LEFT)
-				{
-					vTaskResume(l_handle_led_snake_l);
-				}
-
-				if (snake_side == SS_RIGHT)
-				{
-					vTaskResume(l_handle_led_snake_r);
-				}
-			}
-		}
-
 		// test PTC11 switch
 		if ( GPIO_PinRead( SW_PTC11_GPIO, SW_PTC11_PIN ) == 0 )
 		{
@@ -314,6 +337,17 @@ int main(void) {
 			NULL ) != pdPASS )
     {
         PRINTF( "Unable to create task '%s'!\r\n", TASK_NAME_LED_PTA_RIGHT );
+    }
+
+    if ( xTaskCreate(
+    		task_led_pta_blink_scan_buttons,
+    		TASK_NAME_LED_PTA_SCN_BTN,
+			configMINIMAL_STACK_SIZE + 100,
+			NULL,
+			NORMAL_TASK_PRIORITY,
+			NULL ) != pdPASS )
+    {
+        PRINTF( "Unable to create task '%s'!\r\n", TASK_NAME_LED_PTA_SCN_BTN );
     }
 
     if ( xTaskCreate( task_snake_from_left, TASK_NAME_LED_SNAKE_L, configMINIMAL_STACK_SIZE + 100, NULL, NORMAL_TASK_PRIORITY, NULL ) != pdPASS )
