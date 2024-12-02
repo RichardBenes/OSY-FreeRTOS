@@ -328,7 +328,7 @@ int main(void) {
     // SET CORRECTLY MAC ADDRESS FOR USAGE IN LAB!
     //
     // Computer in lab use IP address 158.196.XXX.YYY.
-    // Set MAC to 5A FE C0 DE XXX YYY+20
+    // Set MAC to 5A FE C0 DE XXX YYY+21
     // IP address will be configured from DHCP
     //
 	uint8_t ucMAC[ ipMAC_ADDRESS_LENGTH_BYTES ] = { 0x5A, 0xFE, 0xC0, 0xDE, 0x00, 0x00 };
