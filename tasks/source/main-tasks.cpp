@@ -111,7 +111,7 @@ void task_led_pta_blink( void *t_arg )
     {
     	// switch LED on
         GPIO_PinWrite( g_led_pta[ l_inx ].m_led_gpio, g_led_pta[ l_inx ].m_led_pin, 1 );
-        vTaskDelay( 200 );
+        vTaskDelay( 100 );
         // switch LED off
         GPIO_PinWrite( g_led_pta[ l_inx ].m_led_gpio, g_led_pta[ l_inx ].m_led_pin, 0 );
         // next LED
@@ -120,39 +120,59 @@ void task_led_pta_blink( void *t_arg )
     }
 }
 
+typedef enum {
+	SS_LEFT, SS_RIGHT
+} SnakeSide;
+
+SnakeSide snake_side = SS_LEFT;
+
 // This task is snake animation from left side on red LEDs
-void task_snake_left( void *t_arg )
+void task_snake_from_left( void *t_arg )
 {
 	while ( 1 )
 	{
 		vTaskSuspend( 0 );
+
+		if (snake_side == SS_RIGHT) {
+			continue;
+		}
 
 		for ( int inx = 0; inx < LED_PTC_NUM; inx++ )
 		{
 	    	// switch LED on
 	        GPIO_PinWrite( g_led_ptc[ inx ].m_led_gpio, g_led_ptc[ inx ].m_led_pin, 1 );
-	        vTaskDelay( 200 );
+	        vTaskDelay( 100 );
 	        // switch LED off
 	        GPIO_PinWrite( g_led_ptc[ inx ].m_led_gpio, g_led_ptc[ inx ].m_led_pin, 0 );
 		}
+
+		GPIO_PinWrite(g_led_ptc[LED_PTC_NUM - 1].m_led_gpio, g_led_ptc[LED_PTC_NUM - 1].m_led_pin, 1);
+		snake_side = SS_RIGHT;
 	}
 }
 
 // This task is snake animation from right side on red LEDs
-void task_snake_right( void *t_arg )
+void task_snake_from_right( void *t_arg )
 {
 	while ( 1 )
 	{
 		vTaskSuspend( 0 );
 
+		if (snake_side == SS_LEFT) {
+			continue;
+		}
+
 		for ( int inx = LED_PTC_NUM - 1; inx >= 0; inx-- )
 		{
 	    	// switch LED on
 	        GPIO_PinWrite( g_led_ptc[ inx ].m_led_gpio, g_led_ptc[ inx ].m_led_pin, 1 );
-	        vTaskDelay( 200 );
+	        vTaskDelay( 100 );
 	        // switch LED off
 	        GPIO_PinWrite( g_led_ptc[ inx ].m_led_gpio, g_led_ptc[ inx ].m_led_pin, 0 );
 		}
+
+		GPIO_PinWrite(g_led_ptc[0].m_led_gpio, g_led_ptc[0].m_led_pin, 1);
+		snake_side = SS_LEFT;
 	}
 }
 
@@ -223,12 +243,12 @@ int main(void) {
         PRINTF( "Unable to create task '%s'!\r\n", TASK_NAME_LED_PTA );
     }
 
-    if ( xTaskCreate( task_snake_left, TASK_NAME_LED_SNAKE_L, configMINIMAL_STACK_SIZE + 100, NULL, NORMAL_TASK_PRIORITY, NULL ) != pdPASS )
+    if ( xTaskCreate( task_snake_from_left, TASK_NAME_LED_SNAKE_L, configMINIMAL_STACK_SIZE + 100, NULL, NORMAL_TASK_PRIORITY, NULL ) != pdPASS )
     {
         PRINTF( "Unable to create task '%s'!\r\n", TASK_NAME_LED_SNAKE_L );
     }
 
-    if ( xTaskCreate( task_snake_right, TASK_NAME_LED_SNAKE_R, configMINIMAL_STACK_SIZE + 100, NULL, NORMAL_TASK_PRIORITY, NULL ) != pdPASS)
+    if ( xTaskCreate( task_snake_from_right, TASK_NAME_LED_SNAKE_R, configMINIMAL_STACK_SIZE + 100, NULL, NORMAL_TASK_PRIORITY, NULL ) != pdPASS)
     {
         PRINTF( "Unable to create task '%s'!\r\n", TASK_NAME_LED_SNAKE_R );
     }
